@@ -1,0 +1,5 @@
+naver:
+  openapi:
+    movieUrl: https://openapi.naver.com/v1/search/movie.json
+    clientId: U6FmlDu7_gc9_Hk3m92l
+    clientSecret: pbfhbvXad2
