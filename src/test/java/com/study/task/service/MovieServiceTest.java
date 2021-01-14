@@ -33,9 +33,12 @@ class MovieServiceTest {
     @Autowired
     private NaverProperties naverProperties;
 
+    @Autowired
+    private MovieService movieService;
+
     @Test
     @DisplayName("API 응답 데이터 검증")
-    void findAllApiRes() throws Exception{
+    void findAllApiRes() throws Exception {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("X-Naver-CLient-Id", naverProperties.getClientId());
         httpHeaders.add("X-Naver-Client-Secret", naverProperties.getClientSecret());
@@ -56,4 +59,21 @@ class MovieServiceTest {
         assertNotNull(body.getTotal());
     }
 
+    @Test
+    @DisplayName("Client 응답 데이터 검증")
+    void search() {
+
+        String query = "반지의 제왕";
+
+        List<ResponseMovieClientDto> search = movieService.search(query);
+
+        search.forEach( s ->
+            assertAll(
+                () -> assertNotNull(s.getTitle()),
+                () -> assertNotNull(s.getLink()),
+                () -> assertNotNull(s.getUserRating())
+            )
+        );
+
+    }
 }
