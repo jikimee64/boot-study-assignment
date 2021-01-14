@@ -1,5 +1,6 @@
 package com.study.task.controller;
 
+import com.study.task.domain.movie.dto.ResponseMovieApiDto;
 import com.study.task.domain.movie.dto.ResponseMovieClientDto;
 import com.study.task.service.MovieService;
 import java.util.List;

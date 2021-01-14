@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseMovieApiDto {
 
+    private String lastBuildDate;
+    private String total;
+    private String start;
+    private String display;
     private List<Item> items;
 
     @Getter
@@ -23,8 +27,11 @@ public class ResponseMovieApiDto {
 
         private String title;
         private String link;
-        private String actor;
+        private String image;
+        private String subtitle;
+        private String pubDate;
         private String director;
+        private String actor;
         private float userRating;
     }
 
