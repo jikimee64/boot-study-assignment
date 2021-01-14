@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class NaverProperties {
 
     private String movieUrl;
+    private String bookUrl;
     private String clientId;
     private String clientSecret;
 }

@@ -22,7 +22,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     @Override
     public List<ResponseMovieClientDto> findByQuery(String query) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("X-Naver-CLient-Id", naverProperties.getClientId());
+        httpHeaders.add("X-Naver-Client-Id", naverProperties.getClientId());
         httpHeaders.add("X-Naver-Client-Secret", naverProperties.getClientSecret());
 
         String url = naverProperties.getMovieUrl() + "?query=" + query;
@@ -39,6 +39,5 @@ public class MovieRepositoryImpl implements MovieRepository {
                 .build())
             .collect(Collectors.toList());
     }
-
 
 }
