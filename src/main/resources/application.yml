@@ -2,3 +2,7 @@ naver:
   openapi:
     movieUrl: https://openapi.naver.com/v1/search/movie.json
     bookUrl: https://openapi.naver.com/v1/search/book.json
+kakao:
+  openapi:
+    translateUrl: https://dapi.kakao.com/v2/translation/translate
+    contentType: application/x-www-form-urlencoded
