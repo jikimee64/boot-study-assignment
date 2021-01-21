@@ -2,9 +2,11 @@ package com.study.task.controller;
 
 import com.study.task.domain.movie.dto.ResponseMovieApiDto;
 import com.study.task.domain.movie.dto.ResponseMovieClientDto;
+import com.study.task.exception.BadRequestQueryEmptyException;
 import com.study.task.service.MovieService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +20,10 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/movies")
-    public List<ResponseMovieClientDto> getMoviesByQuery(@RequestParam(name = "q") String query){
+    public List<ResponseMovieClientDto> getMoviesByQuery(@RequestParam(name = "q") String query) {
+        if (StringUtils.isEmpty(query)) {
+            throw new BadRequestQueryEmptyException();
+        }
         return movieService.search(query);
     }
 
