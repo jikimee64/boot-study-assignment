@@ -29,9 +29,8 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public List<ResponseMovieClientDto> findByQuery(String query) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("X-Naver-Client-Id", naverProperties.getClientId());
-        httpHeaders.add("X-Naver-Client-Secret", naverProperties.getClientSecret());
+
+        HttpHeaders httpHeaders = naverProperties.getHttpHeaders();
 
         List<ResponseMovieClientDto> collect = null;
 

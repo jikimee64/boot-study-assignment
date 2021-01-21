@@ -6,3 +6,8 @@ kakao:
   openapi:
     translateUrl: https://dapi.kakao.com/v2/translation/translate
     contentType: application/x-www-form-urlencoded
+rest:
+  maxConnTotal: 50
+  maxConnPerRoute: 10
+  setConnectTimeout: 3000
+  readTimeout: 5000
