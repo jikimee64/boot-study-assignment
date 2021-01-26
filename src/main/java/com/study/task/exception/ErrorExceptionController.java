@@ -18,9 +18,9 @@ public class ErrorExceptionController {
     public ResponseEntity<?> naverApiUnauthorizedExceptionHandler(NaverApiUnauthorizedException ex) {
         return new ResponseEntity<>(
             CommonResponse.builder()
-                .code("500")
-                .message(ErrorCode.NAVER_API_UNAUTHORIZED.getMessage()).build(),
-            HttpStatus.INTERNAL_SERVER_ERROR);
+            .code("500")
+            .message(ErrorCode.NAVER_API_UNAUTHORIZED.getMessage()).build(),
+        HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler
