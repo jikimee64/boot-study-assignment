@@ -23,8 +23,8 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    //캐싱 자료구조?
-    private final List<CashingMovieDto> memoryMovies;
+    //캐싱 역할
+    public static final List<CashingMovieDto> memoryMovies = new ArrayList<>();
 
     @GetMapping("/movies")
     public List<ResponseMovieClientDto> getMoviesByQuery(@RequestParam(name = "q") String query) {
@@ -33,9 +33,10 @@ public class MovieController {
             throw new BadRequestQueryEmptyException();
         }
 
-        //캐싱 꺼낸후..
+        //캐싱 꺼낸후...
         List<CashingMovieDto> cashingPull = cashingDataSearch(query);
 
+        //캐싱이 비어있지 않다면
         if (!cashingPull.isEmpty()) {
             log.info("========== 영화 검색 결과 캐싱값 반환 ==========");
             List<ResponseMovieClientDto> list = new ArrayList<>();
@@ -59,7 +60,7 @@ public class MovieController {
     }
 
     //네이버 API 검색결과 캐싱에 저장
-    private void cashingDataSave(String query, List<ResponseMovieClientDto> movieDtoList) {
+    public static void cashingDataSave(String query, List<ResponseMovieClientDto> movieDtoList) {
         log.info("========== 영화 검색 API 결과 반환 후 캐싱에 저장 ==========");
         for (ResponseMovieClientDto dto : movieDtoList) {
             memoryMovies.add(
@@ -75,11 +76,9 @@ public class MovieController {
 
     //캐싱에서 특정 키워드를 검색 후 해당 데이터 반환
     private List<CashingMovieDto> cashingDataSearch(String query) {
-
         return memoryMovies.stream()
             .filter(s -> s.getKeyword().equals(query))
             .collect(Collectors.toCollection(ArrayList::new));
-
     }
 
 }
