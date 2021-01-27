@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +24,12 @@ public class CacheController {
     private final MovieService movieService;
 
 
-    @GetMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<CommonResponse> getMoviesByQuery(@RequestParam(name = "q") String query) {
 
         List<ResponseMovieClientDto> list = movieService.search(query);
 
-        if(!list.isEmpty()){
+        if(!StringUtils.isEmpty(list)){
             MovieController.cashingDataSave(query, list);
             return new ResponseEntity<>(
                 CommonResponse.builder()

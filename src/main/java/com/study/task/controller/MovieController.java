@@ -5,6 +5,7 @@ import com.study.task.domain.movie.dto.ResponseMovieClientDto;
 import com.study.task.exception.BadRequestQueryEmptyException;
 import com.study.task.service.MovieService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,10 @@ public class MovieController {
     private final MovieService movieService;
 
     //캐싱 역할
-    public static final List<CashingMovieDto> memoryMovies = new ArrayList<>();
+    public static HashMap<String, List<CashingMovieDto>> memoryMovies = new HashMap();
+
+    //캐싱 역할
+    //public static final List<CashingMovieDto> memoryMovies = new ArrayList<>();
 
     @GetMapping("/movies")
     public List<ResponseMovieClientDto> getMoviesByQuery(@RequestParam(name = "q") String query) {
@@ -37,7 +41,7 @@ public class MovieController {
         List<CashingMovieDto> cashingPull = cashingDataSearch(query);
 
         //캐싱이 비어있지 않다면
-        if (!cashingPull.isEmpty()) {
+        if (!StringUtils.isEmpty(cashingPull)) {
             log.info("========== 영화 검색 결과 캐싱값 반환 ==========");
             List<ResponseMovieClientDto> list = new ArrayList<>();
 
@@ -62,23 +66,24 @@ public class MovieController {
     //네이버 API 검색결과 캐싱에 저장
     public static void cashingDataSave(String query, List<ResponseMovieClientDto> movieDtoList) {
         log.info("========== 영화 검색 API 결과 반환 후 캐싱에 저장 ==========");
+
+        List<CashingMovieDto> list = new ArrayList<>();
+
         for (ResponseMovieClientDto dto : movieDtoList) {
-            memoryMovies.add(
+            list.add(
                 CashingMovieDto.builder()
-                    .keyword(query) //검색 키워드도 함께 저장
                     .title(dto.getTitle())
                     .link(dto.getLink())
                     .userRating(dto.getUserRating())
                     .build()
             );
         }
+        memoryMovies.put(query, list);
     }
 
     //캐싱에서 특정 키워드를 검색 후 해당 데이터 반환
     private List<CashingMovieDto> cashingDataSearch(String query) {
-        return memoryMovies.stream()
-            .filter(s -> s.getKeyword().equals(query))
-            .collect(Collectors.toCollection(ArrayList::new));
+        return memoryMovies.get(query);
     }
 
 }
