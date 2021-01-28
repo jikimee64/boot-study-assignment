@@ -1,10 +1,13 @@
 package com.study.task.controller;
 
-import com.study.task.domain.movie.dto.ResponseMovieApiDto;
+import com.study.task.domain.movie.dto.CashingMovieDto;
 import com.study.task.domain.movie.dto.ResponseMovieClientDto;
 import com.study.task.exception.BadRequestQueryEmptyException;
 import com.study.task.service.MovieService;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -21,13 +24,66 @@ public class MovieController {
 
     private final MovieService movieService;
 
+    //캐싱 역할
+    public static HashMap<String, List<CashingMovieDto>> memoryMovies = new HashMap();
+
+    //캐싱 역할
+    //public static final List<CashingMovieDto> memoryMovies = new ArrayList<>();
+
     @GetMapping("/movies")
     public List<ResponseMovieClientDto> getMoviesByQuery(@RequestParam(name = "q") String query) {
         if (StringUtils.isEmpty(query)) {
             log.info("========== 빈 쿼리값 ==========");
             throw new BadRequestQueryEmptyException();
         }
-        return movieService.search(query);
+
+        //캐싱 꺼낸후...
+        List<CashingMovieDto> cashingPull = cashingDataSearch(query);
+
+        //캐싱이 비어있지 않다면
+        if (!StringUtils.isEmpty(cashingPull)) {
+            log.info("========== 영화 검색 결과 캐싱값 반환 ==========");
+            List<ResponseMovieClientDto> list = new ArrayList<>();
+
+            cashingPull.stream()
+                .forEach(s -> {
+                    list.add(ResponseMovieClientDto.builder()
+                        .title(s.getTitle())
+                        .link(s.getLink())
+                        .userRating(s.getUserRating())
+                        .build());
+                });
+            return list;
+        }
+
+        //movieService.search 가는 순간 API 호출
+        List<ResponseMovieClientDto> movieDtoList = movieService.search(query);
+        cashingDataSave(query, movieDtoList);
+
+        return movieDtoList;
+    }
+
+    //네이버 API 검색결과 캐싱에 저장
+    public static void cashingDataSave(String query, List<ResponseMovieClientDto> movieDtoList) {
+        log.info("========== 영화 검색 API 결과 반환 후 캐싱에 저장 ==========");
+
+        List<CashingMovieDto> list = new ArrayList<>();
+
+        for (ResponseMovieClientDto dto : movieDtoList) {
+            list.add(
+                CashingMovieDto.builder()
+                    .title(dto.getTitle())
+                    .link(dto.getLink())
+                    .userRating(dto.getUserRating())
+                    .build()
+            );
+        }
+        memoryMovies.put(query, list);
+    }
+
+    //캐싱에서 특정 키워드를 검색 후 해당 데이터 반환
+    private List<CashingMovieDto> cashingDataSearch(String query) {
+        return memoryMovies.get(query);
     }
 
 }

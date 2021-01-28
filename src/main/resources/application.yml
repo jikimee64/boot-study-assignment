@@ -11,3 +11,6 @@ rest:
   maxConnPerRoute: 10
   setConnectTimeout: 3000
   readTimeout: 5000
+
+cron:
+  expression: 0 0/10 * * * *
