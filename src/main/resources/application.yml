@@ -14,3 +14,8 @@ rest:
 
 cron:
   expression: 0 0/10 * * * *
+
+spring:
+  redis:
+    host: localhost
+    post: 6379
