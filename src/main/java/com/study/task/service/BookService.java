@@ -4,6 +4,7 @@ import com.study.task.domain.book.dto.ResponseBookApiDto;
 import com.study.task.domain.book.dto.ResponseBookClientDto;
 import com.study.task.domain.movie.dto.ResponseMovieClientDto;
 import com.study.task.repoisotry.BookRepository;
+import com.study.task.util.PerformanceTimeRecord;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
+    @PerformanceTimeRecord
     public List<ResponseBookClientDto> search(String query) {
         List<ResponseBookApiDto> byQuery = bookRepository.findByQuery(query);
 
